@@ -1,54 +1,68 @@
-'use client'
+"use client";
 
-import { type Editor, EditorContent } from '@tiptap/react'
+import React from "react";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 
-const ToolbarButton = ({
+type ToolbarButtonProps = {
+  isActive?: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+  title?: string;
+};
+
+const ToolbarButton: React.FC<ToolbarButtonProps> = ({
   isActive,
   onClick,
   children,
   title,
-}: {
-  isActive?: boolean
-  onClick: () => void
-  children: React.ReactNode
-  title?: string
 }) => (
   <button
     onClick={onClick}
     title={title}
     className={`p-2 rounded hover:bg-gray-700 transition-colors ${
-      isActive ? 'bg-gray-700' : ''
+      isActive ? "bg-gray-700" : ""
     }`}
   >
     {children}
   </button>
-)
+);
 
-export default function TiptapEditor({ editor }: { editor: Editor | null }) {
-  if (!editor) {
-    return null
-  }
+export default function TiptapEditor() {
+  const editor: Editor | null = useEditor({
+    extensions: [StarterKit],
+    content: "<p>Hello, world!</p>",
+    immediatelyRender: false, 
+  });
+
+  if (!editor) return null;
 
   return (
     <div className="border border-gray-700 rounded-lg overflow-hidden">
       <div className="flex flex-wrap gap-1 p-2 bg-gray-800 border-b border-gray-700">
         <ToolbarButton
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          isActive={editor.isActive('heading', { level: 1 })}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
+          isActive={editor.isActive("heading", { level: 1 })}
           title="Heading 1"
         >
           H1
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          isActive={editor.isActive('heading', { level: 2 })}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
+          isActive={editor.isActive("heading", { level: 2 })}
           title="Heading 2"
         >
           H2
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          isActive={editor.isActive('heading', { level: 3 })}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
+          isActive={editor.isActive("heading", { level: 3 })}
           title="Heading 3"
         >
           H3
@@ -56,57 +70,57 @@ export default function TiptapEditor({ editor }: { editor: Editor | null }) {
         <div className="w-px h-6 bg-gray-700 mx-1" />
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
-          isActive={editor.isActive('bold')}
+          isActive={editor.isActive("bold")}
           title="Bold"
         >
           <strong>B</strong>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          isActive={editor.isActive('italic')}
+          isActive={editor.isActive("italic")}
           title="Italic"
         >
           <em>I</em>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          isActive={editor.isActive('strike')}
+          isActive={editor.isActive("strike")}
           title="Strikethrough"
         >
           <s>S</s>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleCode().run()}
-          isActive={editor.isActive('code')}
+          isActive={editor.isActive("code")}
           title="Inline Code"
         >
-          {'</>'}
+          {"</>"}
         </ToolbarButton>
         <div className="w-px h-6 bg-gray-700 mx-1" />
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          isActive={editor.isActive('bulletList')}
+          isActive={editor.isActive("bulletList")}
           title="Bullet List"
         >
           •
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          isActive={editor.isActive('orderedList')}
+          isActive={editor.isActive("orderedList")}
           title="Numbered List"
         >
           1.
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          isActive={editor.isActive('codeBlock')}
+          isActive={editor.isActive("codeBlock")}
           title="Code Block"
         >
-          {'```'}
+          {"```"}
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          isActive={editor.isActive('blockquote')}
+          isActive={editor.isActive("blockquote")}
           title="Quote"
         >
           "
@@ -125,8 +139,7 @@ export default function TiptapEditor({ editor }: { editor: Editor | null }) {
           ↻
         </ToolbarButton>
       </div>
-
       <EditorContent editor={editor} className="tiptap" />
     </div>
-  )
-} 
+  );
+}

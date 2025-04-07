@@ -1,11 +1,11 @@
-@import "tailwindcss";
-
-
+@tailwind base;
 @layer base {
   :root {
-    --tiptap-color: theme(colors.gray.200);
+    --tiptap-color: theme('colors.gray.200');
   }
 }
+@tailwind components;
+@tailwind utilities;
 
 .ProseMirror {
   @apply min-h-[200px] p-4 rounded-lg bg-gray-800/50 focus:outline-none;
@@ -57,4 +57,4 @@
 
 .tiptap blockquote {
   @apply border-l-4 border-primary-500 pl-4 italic my-4;
-} 
+}
