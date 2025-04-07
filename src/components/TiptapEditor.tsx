@@ -1,21 +1,22 @@
 "use client";
 
 import React from "react";
-import { useEditor, EditorContent, Editor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { Editor, EditorContent } from "@tiptap/react";
 
-type ToolbarButtonProps = {
-  isActive?: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  title?: string;
+type TiptapEditorProps = {
+  editor: Editor | null;
 };
 
-const ToolbarButton: React.FC<ToolbarButtonProps> = ({
+const ToolbarButton = ({
   isActive,
   onClick,
   children,
   title,
+}: {
+  isActive?: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+  title?: string;
 }) => (
   <button
     onClick={onClick}
@@ -28,13 +29,7 @@ const ToolbarButton: React.FC<ToolbarButtonProps> = ({
   </button>
 );
 
-export default function TiptapEditor() {
-  const editor: Editor | null = useEditor({
-    extensions: [StarterKit],
-    content: "<p>Hello, world!</p>",
-    immediatelyRender: false, 
-  });
-
+export default function TiptapEditor({ editor }: TiptapEditorProps) {
   if (!editor) return null;
 
   return (
