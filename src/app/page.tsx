@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useEditor, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import toast from "react-hot-toast";
-import { marked } from "marked";
+import TurndownService from "turndown";
 
 // Updated dynamic import with type for the prop
 const TiptapEditor = dynamic<{ editor: Editor | null }>(
@@ -48,7 +48,7 @@ const recommendedSections = [
 export default function Home() {
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
-  const [license, setLicense] = useState("MIT");
+  const [license, setLicense] = useState("Apache-2.0");
   const [sections, setSections] = useState<string[]>([
     "Installation",
     "Usage",
@@ -101,10 +101,13 @@ export default function Home() {
       toast.error("Project description is required");
       return;
     }
-    const content = editor?.getHTML() || "";
-    const markdown = marked.parse(content);
 
-    // Generate README content
+    // Convert the editor's HTML to Markdown using Turndown
+    const htmlContent = editor?.getHTML() || "";
+    const turndownService = new TurndownService();
+    const markdownFromEditor = turndownService.turndown(htmlContent);
+
+    // Generate README content in Markdown format
     const readmeContent = `# ${projectName}
 
 ![License](https://img.shields.io/badge/license-${license}-blue.svg)
@@ -119,11 +122,12 @@ ${sections
   .map((section) => `- [${section}](#${section.toLowerCase()})`)
   .join("\n")}
 
-${markdown}
+${markdownFromEditor}
 
 ## License
 
-This project is licensed under the ${license} License - see the [LICENSE](LICENSE) file for details.`;
+This project is licensed under the ${license} License - see the [LICENSE](LICENSE) file for details.
+`;
 
     // Create a blob and download the file
     const blob = new Blob([readmeContent], { type: "text/markdown" });
@@ -258,9 +262,7 @@ This project is licensed under the ${license} License - see the [LICENSE](LICENS
           {showPreview ? (
             <div
               className="prose prose-invert max-w-none p-4 rounded-lg bg-gray-800/50"
-              dangerouslySetInnerHTML={{
-                __html: marked.parse(editor?.getHTML() || ""),
-              }}
+              dangerouslySetInnerHTML={{ __html: editor?.getHTML() || "" }}
             />
           ) : (
             <TiptapEditor editor={editor} />
